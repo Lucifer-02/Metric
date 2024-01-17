@@ -4,20 +4,34 @@ import pandas as pd
 if __name__ == "__main__":
     df = pd.read_excel("./De/DA_Excel.xlsx", sheet_name="Dữ liệu")
 
-    print("-" * 30, "column names", "-" * 30)
-    print(df.columns)
+    # print("-" * 30, "column names", "-" * 30)
+    # print(df.columns)
+    #
+    # print("-" * 30, "Explore empty", "-" * 30)
+    # # print(df["Thương hiệu"].unique())
+    # for field in df.columns:
+    #     print(f"{field}: {df[field].isnull().sum()}")
+    #
+    # # # Can I do something with brand missing?
+    # print(df[df["Thương hiệu"].isnull()][["Tên sản phẩm", "Thương hiệu"]])
+    #
+    # print("-" * 30, "Explore duplicates", "-" * 30)
+    # for field in df.columns:
+    #     print(f"{field}: {len(df[df[field].duplicated()])}")
 
-    print("-" * 30, "Explore empty", "-" * 30)
-    # print(df["Thương hiệu"].unique())
-    for field in df.columns:
-        print(f"{field}: {df[field].isnull().sum()}")
+    # df1 = df[df["Ngành hàng"] == "Chưa phân loại"]
+    # df2 = df1[df1["Tên sản phẩm"].str.contains("điện thoại", case=True)]
+    # print(df1)
 
-    # # Can I do something with brand missing?
-    print(df[df["Thương hiệu"].isnull()][["Tên sản phẩm", "Thương hiệu"]])
+    # df1 = df[df["Tên sản phẩm"].str.contains("máy tính bảng", case=True)]
 
-    print("-" * 30, "Explore duplicates", "-" * 30)
-    for field in df.columns:
-        print(f"{field}: {len(df[df[field].duplicated()])}")
+    print(df[df["Tổng doanh số"].duplicated()][["Tên sản phẩm", "Tổng doanh số"]])
+
+    # print(
+    #     temp[df["Tên sản phẩm"].str.contains(pat="điện thoại", case=False)][
+    #         ["Tên sản phẩm", "Số đã bán", "Ngành hàng"]
+    #     ]
+    # )
 
     # # check Is every records that have empty "Giá phân loại cao nhất" field also empty "Giá phân loại nhỏ nhất" field?
     # print(

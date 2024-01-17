@@ -1,3 +1,3 @@
 run:
-	python3 ./prepare.py
+	python3 ./with_python.py
 	# python3 ./explore.py
