@@ -1,28 +1,16 @@
 import pandas as pd
 
 
-def general_clean(df: pd.DataFrame) -> pd.DataFrame:
-    # drop columns that unnecessary
-    new_df = df.drop(
-        [
-            "Số lượt xem sản phẩm",
-            "Số đánh giá",
-            "Ngành hàng cấp 1",
-            "Ngành hàng cấp 2",
-            "Ngành hàng cấp 3",
-            "Thumbnail",
-        ],
-        axis=1,
-    )
-    return new_df
-
-
-def likely_phone(text: str) -> bool:
-    assert text.islower()
-    return "điện thoại" in text
+def likely_phone(name: str) -> bool:
+    """the text contain "điện thoại" likely a phone name"""
+    assert name.islower()
+    return "điện thoại" in name
 
 
 def get_phone_brand(text: str, brands: list[str]) -> str:
+    """
+    Extracts the brand of a phone from a given text.
+    """
     normalized_text = text.lower()
 
     if not likely_phone(normalized_text):
@@ -32,21 +20,45 @@ def get_phone_brand(text: str, brands: list[str]) -> str:
         if brand in normalized_text:
             return brand
 
-    # special cases
     if "galaxy" in normalized_text:
         return "samsung"
 
     return "unknown"
 
 
+def get_platform_from_link(link: str, platforms: list[str]) -> str | None:
+    """
+    Extracts the platform from a given link.
+    """
+    for platform in platforms:
+        if platform in link:
+            return platform
+
+    return None
+
+
 if __name__ == "__main__":
     # Read the Excel file
     raw = pd.read_excel("./De/DA_Excel.xlsx", sheet_name="Dữ liệu")
 
+    platforms = ["shopee", "tiki", "lazada"]
+
     # Select necessary columns
-    df = raw[
-        ["Tên sản phẩm", "Ngành hàng", "Thương hiệu", "Số đã bán", "Tổng doanh số"]
+    columns = [
+        "Tên sản phẩm",
+        "Link shop",
+        "Ngành hàng",
+        "Thương hiệu",
+        "Số đã bán",
+        "Tổng doanh số",
     ]
+    df = raw[columns]
+
+    # get platforms
+    df["platform"] = df["Link shop"].map(
+        lambda link: get_platform_from_link(link, platforms)
+    )
+    df.drop(columns=["Link shop"], inplace=True)
 
     # Replace uncategory
     df["Ngành hàng"].replace(
@@ -54,13 +66,15 @@ if __name__ == "__main__":
     )
 
     # Filter rows for "Điện Thoại & Máy Tính Bảng" category
-    phone_df = df[df["Ngành hàng"] == "Điện Thoại & Máy Tính Bảng"]
+    phone_df = df[
+        (df["Ngành hàng"] == "Điện Thoại & Máy Tính Bảng")
+        & (df["Ngành hàng"].str.contains("điện thoại", case=False))
+    ]
 
     # Define a list of brands
     brands = [
         "apple",
-        "xiaomi",
-        "samsung",
+        "xiaomi", "samsung",
         "oppo",
         "realme",
         "vertu",
@@ -80,14 +94,12 @@ if __name__ == "__main__":
     ]
 
     # Fill missing values in "Thương hiệu" column using custom function
-    phone_df["Thương hiệu"] = phone_df["Thương hiệu"].fillna(
+    phone_df["Thương hiệu"].fillna(
         phone_df["Tên sản phẩm"].map(
             lambda text: get_phone_brand(text=text, brands=brands)
-        )
+        ),
+        inplace=True,
     )
 
-    # print(phone_df[phone_df["Thương hiệu"] == "unknown"])
-
-    # Print the sum of "Số đã bán" column grouped by "Thương hiệu" column
-    print(phone_df.groupby(by="Thương hiệu")[["Số đã bán", "Tổng doanh số"]].sum())
-    # print(phone_df.groupby(by="Thương hiệu")["Tổng doanh số"].sum())
+    # save to file
+    phone_df.to_excel("./prepared.xlsx")

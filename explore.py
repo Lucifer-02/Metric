@@ -4,14 +4,13 @@ import pandas as pd
 if __name__ == "__main__":
     df = pd.read_excel("./De/DA_Excel.xlsx", sheet_name="Dữ liệu")
 
-    # print("-" * 30, "column names", "-" * 30)
-    # print(df.columns)
-    #
-    # print("-" * 30, "Explore empty", "-" * 30)
-    # # print(df["Thương hiệu"].unique())
-    # for field in df.columns:
-    #     print(f"{field}: {df[field].isnull().sum()}")
-    #
+    print("-" * 30, "column names", "-" * 30)
+    print(df.columns)
+
+    print("-" * 30, "Explore empty", "-" * 30)
+    for field in df.columns:
+        print(f"{field}: {df[field].isnull().sum()/len(df) * 100}%")
+
     # # # Can I do something with brand missing?
     # print(df[df["Thương hiệu"].isnull()][["Tên sản phẩm", "Thương hiệu"]])
     #
@@ -21,11 +20,11 @@ if __name__ == "__main__":
 
     # df1 = df[df["Ngành hàng"] == "Chưa phân loại"]
     # df2 = df1[df1["Tên sản phẩm"].str.contains("điện thoại", case=True)]
-    # print(df1)
+    # print(df1[["Tên sản phẩm", "Số đã bán", "Tổng doanh số"]])
 
     # df1 = df[df["Tên sản phẩm"].str.contains("máy tính bảng", case=True)]
 
-    print(df[df["Tổng doanh số"].duplicated()][["Tên sản phẩm", "Tổng doanh số"]])
+    # print(df[df["Tổng doanh số"].duplicated()][["Tên sản phẩm", "Tổng doanh số"]])
 
     # print(
     #     temp[df["Tên sản phẩm"].str.contains(pat="điện thoại", case=False)][
