@@ -2,5 +2,6 @@ prepare:
 	python3 ./prepare.py
 
 run:
-	python3 ./anwers.py
+	# py ./prepare.py
+	py ./answer.py
 	# python3 ./explore.py
