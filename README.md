@@ -1,7 +1,7 @@
 # Metric intervew
 
 ## Python
-- Code: `answers.py`
+- Script nộp: `answers.py`
 - Kết quả: `Results/answers.xlsx`
 - Thứ tự xử lý: đọc file `Data/DA_Excel.xlsx` và `Data/brand_country.csv` rồi sinh ra file `answers.xlsx`
 - Các packages: pandas, openpyxl, xlsxwriter
@@ -13,6 +13,10 @@
 
 
 
+## Misc
+- `explore.py`: khám phá sơ bộ dữ liệu thô
+- `prepare.py`: tiền xử lý dữ liệu để thuận tiện cho đối chiếu kết quả
+- `Makefile`: Tự động hóa quy trình
 
 ## Notes
  
